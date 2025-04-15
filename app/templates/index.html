@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mental Health Companion</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            background: #f4f4f4; 
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        textarea { 
+            width: 100%; 
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-height: 100px;
+            margin: 10px 0;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin-top: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .response-box { 
+            margin-top: 20px; 
+            background: #fff; 
+            padding: 15px; 
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .entries {
+            margin-top: 30px;
+        }
+        .entry {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .entry-time {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+        h1 { 
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌿 Mental Health Companion</h1>
+        
+        <form action="{{ url_for('main.journal') }}" method="POST">
+            <h2>How are you feeling today?</h2>
+            <textarea name="entry" placeholder="Share your thoughts..." required></textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+
+        {% if entries %}
+        <div class="entries">
+            <h2>Your Journal Entries</h2>
+            {% for entry in entries %}
+            <div class="entry">
+                <div class="entry-time">{{ entry.timestamp.strftime('%B %d, %Y at %I:%M %p') }}</div>
+                <p>{{ entry.text }}</p>
+                {% if entry.sentiment_label %}
+                <div class="sentiment">
+                    Mood: <strong>{{ entry.sentiment_label }}</strong>
+                    {% if entry.sentiment_score %}
+                    ({{ "%.2f"|format(entry.sentiment_score) }})
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
